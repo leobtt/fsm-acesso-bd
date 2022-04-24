@@ -9,8 +9,8 @@ db.collection('products')
       db.collection('products').doc(snap.id).collection('images').get()
         .then( imgSnapshot => {
           console.log(snap.id, snap.data())
-          imgSnapshot.forEach( imgSnap => {
-            console.log(`${imgSnap.id} ------------ ${imgSnap.data()}`)
+          imgSnapshot.forEach( img => {
+            console.log(img.id , '-------', img.data())
           } )
         })
     })
