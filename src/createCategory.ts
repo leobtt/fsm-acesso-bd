@@ -4,5 +4,5 @@ const db = admin.firestore()
 
 const doc = db.collection('categories').doc()
 doc.set({
-  category: 'criada via código'
+  category: 'nova categoria'
 }).then( snap => console.log(snap))
