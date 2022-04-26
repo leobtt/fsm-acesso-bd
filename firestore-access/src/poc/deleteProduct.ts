@@ -1,4 +1,4 @@
-import { admin } from "./acess";
+import { admin } from "../access";
 
 const db = admin.firestore()
 

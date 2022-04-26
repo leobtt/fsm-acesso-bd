@@ -1,6 +1,6 @@
 /* u0yubfX0Bi1fHrdGuI5y */
 
-import { admin } from "./acess";
+import { admin } from "../access";
 
 const db = admin.firestore()
 
