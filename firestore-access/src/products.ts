@@ -15,7 +15,7 @@ const findAll = async() => {
     })
   })
   const products2 = []
-  for await(product of products){
+  for await(let product of products){
     const imgs: any = []
     const imgsDB = await db
       .collection('products')
@@ -65,7 +65,7 @@ const findAllPaginated = async({ pageSize = 10, startAfter = '' }) => {
   })
 
   const products2 = []
-  for await(product of products){
+  for await(let product of products){
     const imgs: any = []
     const imgsDB = await db
       .collection('products')
@@ -110,8 +110,12 @@ const remove = async(id : string) => {
   await doc.delete()
 }
 
+interface ICreate {
+  categories: Array<string>,
+  data: any
+}
 
-const create = async({ categories, ...data }) => {
+const create = async({ categories, ...data }: ICreate) => {
   const doc = db.collection('products').doc()
   const categoriesRefs = categories.map(cat => db.collection('categories').doc(cat))
   await doc.set({
@@ -131,7 +135,8 @@ const addImage = async(id: string, data: any) => {
   await imageRef.set(data)
 }
 
-const update = async(id, { categories, ...data }) => {
+
+const update = async(id: string, { categories, ...data } : ICreate) => {
   const categoriesRefs = categories.map(cat => db.collection('categories').doc(cat))
   const doc = db.collection('products').doc(id)
   await doc.update({
