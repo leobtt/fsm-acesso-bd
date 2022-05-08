@@ -13,12 +13,17 @@ export const all = (db: any, query: string) => new Promise((resolve, reject) => 
   })
 })
 
-const listAllProducts = async () => {
+const listProductsPaginate = async ({ pageSize = 1, currentPage = 0 }) => {
   const db = await initDB('banco.sqlite3')
 
   try {
-    const products = await all(db, `SELECT * FROM products;`)
+    const products = await all(db,
+      `SELECT * FROM products limit ${currentPage * pageSize}, ${pageSize + 1};`
+    )
     const productsId: Array<any> = products as Array<any>
+
+    const hasNext: boolean = productsId.length > pageSize
+    if (hasNext) productsId.pop()
 
     const condition: string = productsId.map(product => product.id).join(',')
     const images = await all(db, `SELECT * FROM images WHERE product_id IN (${condition}) GROUP BY product_id`)
@@ -33,8 +38,11 @@ const listAllProducts = async () => {
 
     return productsId.map(product => {
       return {
-        ...product,
-        image: mapImages[product.id]
+        data: {
+          ...product,
+          image: mapImages[product.id]
+        },
+        hasNext
       }
     })
 
@@ -44,7 +52,7 @@ const listAllProducts = async () => {
 
 }
 
-export { listAllProducts }
+export { listProductsPaginate }
 
 /* const products = await all(db,
   `SELECT * FROM products LEFT JOIN images ON products.id = images.product_id GROUP BY images.product_id;`
